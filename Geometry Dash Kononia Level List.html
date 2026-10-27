@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry Dash Koinonia List</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Roboto Condensed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            pc: {
+              bg: '#0d0f12',        // Original dark background
+              panel: '#13161c',     // Dark panel surface
+              card: '#181a21',      // Main level card background
+              hover: '#1e222d',     // Hover state background
+              border: '#2b2e3a',    // Subtle grey border
+              accent: '#3b82f6',    // Authentic pointercrate muted blue accent
+              textMuted: '#94a3b8',
+              textLight: '#e0e6ed'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Roboto Condensed', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #e0e6ed;
+    }
+
+    /* Pointercrate authentic clean scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d0f12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b2e3a;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b82f6;
+    }
+
+    /* Active level sidebar indicator */
+    .level-item-active {
+      background-color: #1e222d !important;
+      border-left: 3px solid #3b82f6 !important;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col bg-pc-bg text-pc-textLight selection:bg-pc-accent selection:text-white">
+
+  <!-- ================= HEADER / NAVBAR (Pointercrate style) ================= -->
+  <header class="bg-pc-panel border-b border-pc-border sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded bg-pc-card border border-pc-border flex items-center justify-center text-pc-accent font-black">
+            <i class="fa-solid fa-list-ol text-sm"></i>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <h1 class="font-display text-lg font-bold tracking-wider text-white uppercase">
+              KOINONIA <span class="text-pc-accent font-extrabold">DEMONLIST</span>
+            </h1>
+            <span class="text-[11px] font-semibold text-pc-textMuted hidden sm:inline border-l border-pc-border pl-2">Lista Oficial</span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="hidden md:flex items-center space-x-1">
+          <button onclick="switchTab('list')" id="nav-list" class="nav-btn px-3 py-2 rounded text-xs font-semibold text-white bg-pc-card border border-pc-border flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-layer-group text-pc-accent"></i> Demonlist
+          </button>
+          <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn px-3 py-2 rounded text-xs font-semibold text-pc-textMuted hover:text-white hover:bg-pc-hover flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Reglas
+          </button>
+        </nav>
+
+        <!-- Right info -->
+        <div class="text-xs text-pc-textMuted hidden sm:flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+          <span>Versión Oficial</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Bar -->
+    <div class="md:hidden flex border-t border-pc-border bg-pc-panel justify-around p-1.5 text-xs">
+      <button onclick="switchTab('list')" id="mob-list" class="mob-btn py-1.5 px-3 rounded font-bold text-white bg-pc-card border border-pc-border">Demonlist</button>
+      <button onclick="switchTab('rules')" id="mob-rules" class="mob-btn py-1.5 px-3 rounded text-pc-textMuted">Reglas</button>
+    </div>
+  </header>
+
+  <!-- ================= SUBTITLE BANNER ================= -->
+  <div class="bg-pc-panel/50 border-b border-pc-border py-2.5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+      <p class="text-pc-textMuted">
+        Ranking oficial de los Extreme Demons más difíciles de la comunidad <strong class="text-white">Koinonia GD</strong>.
+      </p>
+      <div class="flex items-center gap-4 text-pc-textMuted font-mono text-[11px]">
+        <span>Niveles en Lista: <strong id="header-count" class="text-pc-accent font-bold">0</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ----------------- SECTION 1: MAIN DEMONLIST (TWO COLUMNS) ----------------- -->
+    <div id="tab-content-list" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- LEFT COLUMN: Search & Level Navigation List (4 Cols) -->
+      <div class="lg:col-span-4 flex flex-col space-y-3">
+        
+        <!-- Search & Filter Box -->
+        <div class="bg-pc-panel p-3 rounded border border-pc-border space-y-2">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pc-textMuted text-xs"></i>
+            <input type="text" id="search-input" oninput="filterLevels()" placeholder="Buscar nivel, creador, verificador..." class="w-full pl-8 pr-3 py-1.5 bg-pc-bg border border-pc-border rounded text-xs text-white placeholder-pc-textMuted focus:outline-none focus:border-pc-accent">
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-pc-textMuted pt-0.5">
+            <span>Ordenamiento: <strong class="text-slate-300">Posición (#)</strong></span>
+            <span id="filtered-count-label" class="text-slate-400"></span>
+          </div>
+        </div>
+
+        <!-- Level Items Container (Scrollable List) -->
+        <div id="level-sidebar-list" class="space-y-1.5 max-h-[720px] overflow-y-auto pr-1">
+          <!-- Dynamically populated from JS array -->
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Detailed Level View Panel (8 Cols) -->
+      <div class="lg:col-span-8">
+        
+        <!-- Empty State (When list array is empty) -->
+        <div id="right-empty-panel" class="hidden bg-pc-panel rounded border border-pc-border p-12 text-center space-y-4">
+          <div class="w-16 h-16 mx-auto rounded-full bg-pc-card border border-pc-border flex items-center justify-center text-pc-textMuted">
+            <i class="fa-solid fa-folder-open text-2xl"></i>
+          </div>
+          <div class="space-y-1 max-w-md mx-auto">
+            <h2 class="font-display text-lg font-bold text-white uppercase tracking-wider">
+              No hay niveles registrados en el código
+            </h2>
+            <p class="text-xs text-pc-textMuted leading-relaxed">
+              Agrega niveles directamente modificando el arreglo <code class="bg-pc-bg px-1.5 py-0.5 rounded text-pc-accent font-mono">LEVELS</code> en el código JavaScript de la página.
+            </p>
+          </div>
+        </div>
+
+        <!-- Active Selected Level View Container -->
+        <div id="right-level-panel" class="bg-pc-panel rounded border border-pc-border overflow-hidden space-y-0 shadow-sm">
+          
+          <!-- Top Header Banner: Level Name, Position & Badges -->
+          <div class="p-5 border-b border-pc-border bg-pc-card/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-3">
+                <span id="detail-rank" class="font-display font-extrabold text-3xl text-pc-accent">#1</span>
+                <div>
+                  <h2 id="detail-name" class="font-display text-2xl font-bold text-white uppercase tracking-wide">Nombre del nivel</h2>
+                  <p class="text-xs text-pc-textMuted mt-0.5">
+                    Creado por <span id="detail-creator" class="text-slate-200 font-semibold">--</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <span id="detail-difficulty" class="px-2.5 py-1 bg-pc-bg border border-pc-border rounded text-[11px] font-bold text-red-400 uppercase">Extreme Demon</span>
+              <span id="detail-id" class="px-2.5 py-1 bg-pc-bg border border-pc-border rounded text-[11px] font-mono text-amber-400 font-semibold">ID: --</span>
+            </div>
+          </div>
+
+          <!-- Video Embed Area -->
+          <div class="p-5 border-b border-pc-border bg-black/40">
+            <div class="w-full aspect-video bg-black rounded border border-pc-border overflow-hidden flex items-center justify-center relative shadow-inner" id="detail-video-wrapper">
+              <!-- Embed iframe dynamically injected -->
+            </div>
+          </div>
+
+          <!-- Technical Details Info Grid -->
+          <div class="p-5 border-b border-pc-border grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-pc-card/30">
+            <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
+              <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Verificado por</span>
+              <span id="detail-verifier" class="font-semibold text-sky-400 truncate block">--</span>
+            </div>
+            <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
+              <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Progreso Mínimo</span>
+              <span id="detail-cutoff" class="font-semibold text-slate-200 block">100%</span>
+            </div>
+            <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
+              <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Puntos de Lista</span>
+              <span id="detail-points" class="font-semibold text-emerald-400 block">100.00 pts</span>
+            </div>
+            <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
+              <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Canción ID / Nombre</span>
+              <span id="detail-song" class="font-semibold text-slate-300 truncate block">--</span>
+            </div>
+          </div>
+
+    <!-- ----------------- SECTION 2: RULES TAB ----------------- -->
+    <div id="tab-content-rules" class="hidden space-y-4">
+      <div class="bg-pc-panel rounded border border-pc-border p-6 space-y-5 max-w-4xl mx-auto shadow-sm">
+        <div class="border-b border-pc-border pb-3">
+          <h2 class="font-display font-bold text-xl uppercase text-white tracking-wide flex items-center gap-2">
+            <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Reglas Oficiales de Verificación
+          </h2>
+          <p class="text-xs text-pc-textMuted">Normas estrictas requeridas para la aceptación de récords en Koinonia List.</p>
+        </div>
+
+        <div class="space-y-3.5 text-xs text-slate-300 leading-relaxed">
+          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
+            <h3 class="font-bold text-white text-sm">1. Grabación de Vídeo Completa</h3>
+            <p class="text-pc-textMuted">
+              El vídeo enviado debe ser continuo, sin cortes en la imagen ni modificaciones en la velocidad. Debe mostrar el intento desde el 0% hasta la pantalla final de nivel completado.
+            </p>
+          </div>
+
+          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
+            <h3 class="font-bold text-white text-sm">2. Audio de Clics / Pulsaciones (Clicks / Taps)</h3>
+            <p class="text-pc-textMuted">
+              Todos los récords deben incluir audio audible de clics o pulsaciones sincronizadas con el juego. Para niveles en el Top 5, los clics son estrictamente obligatorios sin excepción.
+            </p>
+          </div>
+
+          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
+            <h3 class="font-bold text-white text-sm">3. Modificaciones y Hacks Permitidos</h3>
+            <p class="text-pc-textMuted">
+              Se permite el uso de FPS Bypass / TPS hasta un límite máximo de 360 FPS. Herramientas como Mega Hack están permitidas únicamente con utilidades cosméticas o informativas (CPS, Cheat Indicator en verde, Show Inputs).
+            </p>
+          </div>
+
+          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
+            <h3 class="font-bold text-white text-sm">4. Prohibición de Secret Ways y Bugs</h3>
+            <p class="text-pc-textMuted">
+              No se aceptará ningún récord logrado mediante atajos no intencionados, modificaciones a la ID del nivel, físicas alteradas o uso de hacks de juego (Speedhack, Hitbox, Noclip, etc.).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-auto border-t border-pc-border bg-pc-panel py-4 text-xs text-pc-textMuted">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <strong class="text-slate-300">Geometry Dash Koinonia List</strong> — Estilo Pointercrate Oficial.
+      </div>
+      <div>
+        Estilo sobrio e idéntico a la Demon List Global.
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT & DATA STRUCTURE ================= -->
+  <script>
+    /* ==========================================================================
+       ESTRUCTURA DE NIVELES (LEVELS ARRAY)
+       Modifica, agrega o elimina niveles directamente editando este arreglo.
+       El orden dentro del arreglo determina su posición en la lista (#1, #2, etc.)
+       ========================================================================== */
+    const LEVELS = [
+      {
+        id: 1,
+        name: " INSANE JUMPER",
+        creator: "AlejoGDOfficial",
+        verifier: "AlejoGDOfficial",
+        difficulty: "Top 1 Demon",
+        levelId: "150470247",
+        cutoff: "100%",
+        song: "JUMPER",
+        videoUrl: "https://medal.tv/es/games/geometry-dash/clips/nLvxBiT71im9WeBN2?invite=cr-MSxmNzAsNzI4MTc3NTkw",
+      },
+      {
+        id: 2,
+        name: "Privastered",
+        creator: "davisitotito en discord",
+        verifier: "davisitotito en discord",
+        difficulty: "Top 2 Demon",
+        levelId: "150461579",
+        cutoff: "100%",
+        song: "BAD PITCH FOR YOU",
+        videoEmbed: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      }
+    ];
+
+    // Current State Variable
+    let selectedLevelId = LEVELS.length > 0 ? LEVELS[0].id : null;
+
+    // Switch Navigation Tabs
+    function switchTab(tabId) {
+      const tabs = ['list', 'rules'];
+      
+      tabs.forEach(t => {
+        const content = document.getElementById(`tab-content-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        const mobBtn = document.getElementById(`mob-${t}`);
+
+        if (t === tabId) {
+          content.classList.remove('hidden');
+          if (navBtn) {
+            navBtn.className = "nav-btn px-3 py-2 rounded text-xs font-semibold text-white bg-pc-card border border-pc-border flex items-center gap-1.5 transition-all";
+          }
+          if (mobBtn) {
+            mobBtn.className = "mob-btn py-1.5 px-3 rounded font-bold text-white bg-pc-card border border-pc-border";
+          }
+        } else {
+          content.classList.add('hidden');
+          if (navBtn) {
+            navBtn.className = "nav-btn px-3 py-2 rounded text-xs font-semibold text-pc-textMuted hover:text-white hover:bg-pc-hover flex items-center gap-1.5 transition-all";
+          }
+          if (mobBtn) {
+            mobBtn.className = "mob-btn py-1.5 px-3 rounded text-pc-textMuted";
+          }
+        }
+      });
+    }
+
+    // Render Left Sidebar Navigation List
+    function renderSidebarList() {
+      const sidebarContainer = document.getElementById('level-sidebar-list');
+      const headerCount = document.getElementById('header-count');
+      const filteredCountLabel = document.getElementById('filtered-count-label');
+
+      headerCount.textContent = LEVELS.length;
+
+      if (LEVELS.length === 0) {
+        sidebarContainer.innerHTML = `
+          <div class="p-4 bg-pc-panel rounded border border-pc-border text-center text-xs text-pc-textMuted italic space-y-1">
+            <p>No hay niveles en la lista.</p>
+          </div>
+        `;
+        filteredCountLabel.textContent = '';
+        return;
+      }
+
+      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+
+      const filtered = LEVELS.filter(lvl => 
+        lvl.name.toLowerCase().includes(searchQuery) ||
+        lvl.creator.toLowerCase().includes(searchQuery) ||
+        lvl.verifier.toLowerCase().includes(searchQuery) ||
+        lvl.levelId.includes(searchQuery)
+      );
+
+      filteredCountLabel.textContent = searchQuery ? `${filtered.length} coincidencia(s)` : '';
+
+      if (filtered.length === 0) {
+        sidebarContainer.innerHTML = `
+          <div class="p-4 bg-pc-panel rounded border border-pc-border text-center text-xs text-pc-textMuted italic">
+            Sin resultados para "${escapeHtml(searchQuery)}"
+          </div>
+        `;
+        return;
+      }
+
+      sidebarContainer.innerHTML = filtered.map(lvl => {
+        const rank = LEVELS.findIndex(l => l.id === lvl.id) + 1;
+        const isActive = lvl.id === selectedLevelId;
+
+        return `
+          <button onclick="selectLevel(${lvl.id})" class="w-full text-left p-2.5 rounded bg-pc-panel hover:bg-pc-hover border border-pc-border transition-all flex items-center justify-between gap-3 ${isActive ? 'level-item-active' : ''}">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <span class="font-display font-extrabold text-sm ${rank === 1 ? 'text-amber-400' : 'text-pc-accent'} w-6 text-right font-mono">#${rank}</span>
+              <div class="truncate">
+                <h4 class="font-display font-bold text-xs text-white truncate uppercase tracking-wider">${escapeHtml(lvl.name)}</h4>
+                <p class="text-[10px] text-pc-textMuted truncate">Por ${escapeHtml(lvl.creator)}</p>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-pc-textMuted"></i>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // Select Level Action
+    function selectLevel(id) {
+      selectedLevelId = id;
+      renderSidebarList();
+      renderSelectedLevelDetails();
+    }
+
+    // Render Detailed View Panel on Right
+    function renderSelectedLevelDetails() {
+      const emptyPanel = document.getElementById('right-empty-panel');
+      const levelPanel = document.getElementById('right-level-panel');
+
+      if (LEVELS.length === 0 || !selectedLevelId) {
+        emptyPanel.classList.remove('hidden');
+        levelPanel.classList.add('hidden');
+        return;
+      }
+
+      const lvlIndex = LEVELS.findIndex(l => l.id === selectedLevelId);
+      if (lvlIndex === -1) {
+        emptyPanel.classList.remove('hidden');
+        levelPanel.classList.add('hidden');
+        return;
+      }
+
+      const lvl = LEVELS[lvlIndex];
+      const rank = lvlIndex + 1;
+      // Formula for calculating points based on ranking position
+      const points = (100 / (rank * 0.75 + 0.25)).toFixed(2);
+
+      emptyPanel.classList.add('hidden');
+      levelPanel.classList.remove('hidden');
+
+      document.getElementById('detail-rank').textContent = `#${rank}`;
+      document.getElementById('detail-name').textContent = lvl.name;
+      document.getElementById('detail-creator').textContent = lvl.creator;
+      document.getElementById('detail-verifier').textContent = lvl.verifier;
+      document.getElementById('detail-difficulty').textContent = lvl.difficulty || "Extreme Demon";
+      document.getElementById('detail-id').textContent = `ID: ${lvl.levelId}`;
+      document.getElementById('detail-cutoff').textContent = lvl.cutoff || "100%";
+      document.getElementById('detail-points').textContent = `${points} pts`;
+      document.getElementById('detail-song').textContent = lvl.song || "Desconocida";
+
+      // Video Iframe / Fallback Embed
+      const videoWrapper = document.getElementById('detail-video-wrapper');
+      if (lvl.videoEmbed) {
+        videoWrapper.innerHTML = `
+          <iframe class="w-full h-full" src="${escapeHtml(lvl.videoEmbed)}" title="${escapeHtml(lvl.name)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `;
+      } else {
+        videoWrapper.innerHTML = `
+          <div class="text-center p-6 space-y-2">
+            <i class="fa-brands fa-youtube text-4xl text-red-500"></i>
+            <p class="text-xs text-slate-300 font-bold">Demostración / Verificación Oficial</p>
+            <a href="${escapeHtml(lvl.videoUrl)}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pc-card hover:bg-pc-hover border border-pc-border rounded text-xs font-semibold text-white transition-all">
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Ver en YouTube
+            </a>
+          </div>
+        `;
+      }
+
+      // Render Records Table
+      const recordsContainer = document.getElementById('detail-records-list');
+      const recordsCount = document.getElementById('detail-records-count');
+
+      recordsCount.textContent = lvl.records ? lvl.records.length : 0;
+
+      if (lvl.records && lvl.records.length > 0) {
+        recordsContainer.innerHTML = lvl.records.map(rec => `
+          <tr class="hover:bg-pc-hover/60 transition-colors">
+            <td class="py-2.5 font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-user-check text-sky-400 text-[11px]"></i>
+              <span>${escapeHtml(rec.player)}</span>
+            </td>
+            <td class="py-2.5 font-mono text-emerald-400 font-bold">${rec.percentage || '100%'}</td>
+            <td class="py-2.5 font-mono text-slate-400">${rec.fps || '360 FPS'}</td>
+            <td class="py-2.5 text-right">
+              <a href="${escapeHtml(rec.video)}" target="_blank" class="text-pc-textMuted hover:text-white transition-colors text-xs inline-flex items-center gap-1">
+                <i class="fa-solid fa-video text-pc-accent"></i> Ver Vídeo
+              </a>
+            </td>
+          </tr>
+        `).join('');
+      } else {
+        recordsContainer.innerHTML = `
+          <tr>
+            <td colspan="4" class="py-4 text-center text-pc-textMuted italic">
+              No hay victorias registradas para este nivel aún.
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Filter input handler
+    function filterLevels() {
+      renderSidebarList();
+    }
+
+    // Utility for escaping HTML
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Initial Load setup
+    window.onload = function() {
+      renderSidebarList();
+      renderSelectedLevelDetails();
+    };
+  </script>
+
+</body>
+</html>
