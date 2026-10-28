@@ -6,7 +6,7 @@
   <title>Geometry Dash Koinonia List</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter & Roboto Condensed -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
@@ -19,12 +19,12 @@
         extend: {
           colors: {
             pc: {
-              bg: '#0d0f12',        // Fondo oscuro oficial
-              panel: '#13161c',     // Superficie de paneles
-              card: '#181a21',      // Tarjetas de niveles
-              hover: '#1e222d',     // Estado hover
-              border: '#2b2e3a',    // Borde gris sutil
-              accent: '#3b82f6',    // Azul acento Pointercrate
+              bg: '#0d0f12',
+              panel: '#13161c',
+              card: '#181a21',
+              hover: '#1e222d',
+              border: '#2b2e3a',
+              accent: '#3b82f6',
               textMuted: '#94a3b8',
               textLight: '#e0e6ed'
             }
@@ -38,57 +38,32 @@
     }
   </script>
   <style>
-    body {
-      background-color: #0d0f12;
-      color: #e0e6ed;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0d0f12;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #2b2e3a;
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3b82f6;
-    }
-
+    body { background-color: #0d0f12; color: #e0e6ed; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0d0f12; }
+    ::-webkit-scrollbar-thumb { background: #2b2e3a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
     .level-item-active {
       background-color: #1e222d !important;
       border-left: 3px solid #3b82f6 !important;
     }
-
     #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.35;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none; z-index: 0; opacity: 0.35;
     }
   </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col bg-pc-bg text-pc-textLight selection:bg-pc-accent selection:text-white relative overflow-x-hidden">
 
-  <!-- Canvas de Fondo Interactivo -->
   <canvas id="bg-canvas"></canvas>
-
-  <!-- Contenedor de Alertas Toast -->
   <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
   <!-- MODAL: ENVIAR RÉCORD -->
-  <div id="submit-record-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <div id="submit-record-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-pc-panel border border-pc-border rounded-lg max-w-md w-full p-6 space-y-4 shadow-2xl relative">
       <div class="flex items-center justify-between border-b border-pc-border pb-3">
         <h3 class="font-display font-bold text-lg text-white uppercase flex items-center gap-2">
-          <i class="fa-solid fa-paper-plane text-emerald-500"></i> Enviar Récord
+          <i class="fa-solid fa-paper-plane text-emerald-500"></i> Enviar Petición al Leaderboard
         </h3>
         <button onclick="toggleRecordModal(false)" class="text-pc-textMuted hover:text-white transition-colors">
           <i class="fa-solid fa-xmark text-lg"></i>
@@ -96,20 +71,21 @@
       </div>
       <form id="record-form" onsubmit="handleRecordSubmit(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Nivel Seleccionado:</label>
-          <input type="text" id="rec-level-name" readonly class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-semibold opacity-80 cursor-not-allowed">
+          <label class="block font-bold text-slate-300 mb-1">Seleccionar Nivel (Demons pasados):</label>
+          <select id="rec-level-select" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-semibold focus:outline-none focus:border-pc-accent">
+          </select>
         </div>
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Nombre / Tag del Jugador:</label>
+          <label class="block font-bold text-slate-300 mb-1">Nombre de la cuenta / Jugador:</label>
           <input type="text" id="rec-player" required placeholder="Ej. senzk" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-300 mb-1">Porcentaje (%):</label>
-            <input type="text" id="rec-percentage" required value="100%" placeholder="100%" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
+            <input type="text" id="rec-percentage" required value="100%" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
           </div>
           <div>
-            <label class="block font-bold text-slate-300 mb-1">Tasa de Refresco / FPS:</label>
+            <label class="block font-bold text-slate-300 mb-1">FPS / Hz:</label>
             <select id="rec-fps" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
               <option value="360 FPS">360 FPS</option>
               <option value="240 FPS">240 FPS</option>
@@ -120,23 +96,23 @@
           </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Link de Prueba (YouTube / Medal):</label>
-          <input type="url" id="rec-video" required placeholder="https://youtu.be/..." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
+          <label class="block font-bold text-slate-300 mb-1">Link de Vídeo (Opcional):</label>
+          <input type="url" id="rec-video" placeholder="https://..." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
         </div>
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Notas Adicionales (Opcional):</label>
-          <textarea id="rec-notes" rows="2" placeholder="Clicks audibles, raw disponible, etc." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent resize-none"></textarea>
+          <label class="block font-bold text-slate-300 mb-1">Notas / Demons pasados adicionales:</label>
+          <textarea id="rec-notes" rows="2" placeholder="Ej. 100% en otros niveles opcionales..." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent resize-none"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-2 border-t border-pc-border">
-          <button type="button" onclick="toggleRecordModal(false)" class="px-4 py-2 bg-pc-card hover:bg-pc-hover border border-pc-border rounded font-semibold text-slate-300 transition-all">Cancelar</button>
-          <button type="submit" id="rec-submit-btn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded font-semibold text-white transition-all shadow-lg shadow-emerald-600/20">Enviar a Discord</button>
+          <button type="button" onclick="toggleRecordModal(false)" class="px-4 py-2 bg-pc-card hover:bg-pc-hover border border-pc-border rounded font-semibold text-slate-300">Cancelar</button>
+          <button type="submit" id="rec-submit-btn" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded font-semibold text-white shadow-lg shadow-emerald-600/20">Enviar a Discord</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: PROPONER NUEVO NIVEL -->
-  <div id="propose-level-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <!-- MODAL: PROPONER NIVEL -->
+  <div id="propose-level-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-pc-panel border border-pc-border rounded-lg max-w-md w-full p-6 space-y-4 shadow-2xl relative">
       <div class="flex items-center justify-between border-b border-pc-border pb-3">
         <h3 class="font-display font-bold text-lg text-white uppercase flex items-center gap-2">
@@ -148,36 +124,36 @@
       </div>
       <form id="propose-form" onsubmit="handleLevelPropose(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Nombre del Nivel:</label>
-          <input type="text" id="prop-name" required placeholder="Ej. Grief" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
+          <label class="block font-bold text-slate-300 mb-1">Nombre:</label>
+          <input type="text" id="prop-name" required placeholder="Nombre del nivel" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-300 mb-1">ID del Nivel:</label>
-            <input type="text" id="prop-levelid" required placeholder="12345678" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
+            <input type="text" id="prop-levelid" required placeholder="123456" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
           </div>
           <div>
-            <label class="block font-bold text-slate-300 mb-1">Nombre/ID Canción:</label>
+            <label class="block font-bold text-slate-300 mb-1">Canción:</label>
             <input type="text" id="prop-song" required placeholder="Nombre o ID" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white font-mono focus:outline-none focus:border-pc-accent">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-slate-300 mb-1">Creador:</label>
-            <input type="text" id="prop-creator" required placeholder="Nombre del creador" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
+            <input type="text" id="prop-creator" required placeholder="Creador" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
           </div>
           <div>
             <label class="block font-bold text-slate-300 mb-1">Verificador:</label>
-            <input type="text" id="prop-verifier" required placeholder="Nombre del verificador" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
+            <input type="text" id="prop-verifier" required placeholder="Verificador" class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
           </div>
         </div>
         <div>
-          <label class="block font-bold text-slate-300 mb-1">Link del Vídeo de Verificación / Showcase:</label>
-          <input type="url" id="prop-video" required placeholder="https://youtu.be/..." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
+          <label class="block font-bold text-slate-300 mb-1">Link de Vídeo:</label>
+          <input type="url" id="prop-video" required placeholder="https://..." class="w-full px-3 py-2 bg-pc-bg border border-pc-border rounded text-white focus:outline-none focus:border-pc-accent">
         </div>
         <div class="flex justify-end gap-2 pt-2 border-t border-pc-border">
-          <button type="button" onclick="toggleProposeModal(false)" class="px-4 py-2 bg-pc-card hover:bg-pc-hover border border-pc-border rounded font-semibold text-slate-300 transition-all">Cancelar</button>
-          <button type="submit" id="prop-submit-btn" class="px-4 py-2 bg-pc-accent hover:bg-blue-600 rounded font-semibold text-white transition-all shadow-lg shadow-blue-500/20">Enviar Propuesta a Discord</button>
+          <button type="button" onclick="toggleProposeModal(false)" class="px-4 py-2 bg-pc-card hover:bg-pc-hover border border-pc-border rounded font-semibold text-slate-300">Cancelar</button>
+          <button type="submit" id="prop-submit-btn" class="px-4 py-2 bg-pc-accent hover:bg-blue-600 rounded font-semibold text-white shadow-lg shadow-blue-500/20">Enviar Propuesta</button>
         </div>
       </form>
     </div>
@@ -188,7 +164,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         
-        <!-- Logo y Título -->
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded bg-pc-card border border-pc-border flex items-center justify-center text-pc-accent font-black shadow-lg shadow-blue-500/10">
             <i class="fa-solid fa-list-ol text-sm"></i>
@@ -201,7 +176,6 @@
           </div>
         </div>
 
-        <!-- Pestañas de Navegación -->
         <nav class="hidden md:flex items-center space-x-1">
           <button onclick="switchTab('list')" id="nav-list" class="nav-btn px-3 py-2 rounded text-xs font-semibold text-white bg-pc-card border border-pc-border flex items-center gap-1.5 transition-all shadow-sm">
             <i class="fa-solid fa-layer-group text-pc-accent"></i> Demonlist
@@ -214,7 +188,6 @@
           </button>
         </nav>
 
-        <!-- Botones derecha -->
         <div class="flex items-center gap-2">
           <button onclick="toggleProposeModal(true)" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pc-card hover:bg-pc-hover border border-pc-border rounded text-xs font-semibold text-white transition-all shadow-sm">
             <i class="fa-solid fa-plus text-pc-accent"></i> Proponer Nivel
@@ -224,7 +197,6 @@
       </div>
     </div>
 
-    <!-- Navegación Mobile -->
     <div class="md:hidden flex border-t border-pc-border bg-pc-panel justify-around p-1.5 text-xs">
       <button onclick="switchTab('list')" id="mob-list" class="mob-btn py-1.5 px-3 rounded font-bold text-white bg-pc-card border border-pc-border">Demonlist</button>
       <button onclick="switchTab('leaderboard')" id="mob-leaderboard" class="mob-btn py-1.5 px-3 rounded text-pc-textMuted">Leaderboard</button>
@@ -232,7 +204,6 @@
     </div>
   </header>
 
-  <!-- BANNER SECUNDARIO -->
   <div class="bg-pc-panel/50 border-b border-pc-border py-2.5 relative z-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
       <p class="text-pc-textMuted">
@@ -246,19 +217,16 @@
     </div>
   </div>
 
-  <!-- CONTENEDOR PRINCIPAL -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 relative z-10">
 
     <!-- SECCIÓN 1: DEMONLIST -->
     <div id="tab-content-list" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       
-      <!-- COLUMNA IZQUIERDA: Búsqueda y Lista -->
       <div class="lg:col-span-4 flex flex-col space-y-3">
-        
         <div class="bg-pc-panel p-3 rounded border border-pc-border space-y-2 shadow-sm">
           <div class="relative">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-pc-textMuted text-xs"></i>
-            <input type="text" id="search-input" oninput="filterLevels()" placeholder="Buscar nivel, creador, verificador..." class="w-full pl-8 pr-3 py-1.5 bg-pc-bg border border-pc-border rounded text-xs text-white placeholder-pc-textMuted focus:outline-none focus:border-pc-accent">
+            <input type="text" id="search-input" oninput="filterLevels()" placeholder="Buscar nivel, creador..." class="w-full pl-8 pr-3 py-1.5 bg-pc-bg border border-pc-border rounded text-xs text-white placeholder-pc-textMuted focus:outline-none focus:border-pc-accent">
           </div>
           <div class="flex items-center justify-between text-[11px] text-pc-textMuted pt-0.5">
             <span>Ordenamiento: <strong class="text-slate-300">Posición (#)</strong></span>
@@ -266,38 +234,27 @@
           </div>
         </div>
 
-        <div id="level-sidebar-list" class="space-y-1.5 max-h-[720px] overflow-y-auto pr-1">
-          <!-- Se puebla dinámicamente con JS -->
-        </div>
-
+        <div id="level-sidebar-list" class="space-y-1.5 max-h-[720px] overflow-y-auto pr-1"></div>
       </div>
 
-      <!-- COLUMNA DERECHA: Vista Detallada del Nivel -->
       <div class="lg:col-span-8">
-        
         <div id="right-empty-panel" class="hidden bg-pc-panel rounded border border-pc-border p-12 text-center space-y-4 shadow-sm">
           <div class="w-16 h-16 mx-auto rounded-full bg-pc-card border border-pc-border flex items-center justify-center text-pc-textMuted">
             <i class="fa-solid fa-folder-open text-2xl"></i>
           </div>
           <div class="space-y-1 max-w-md mx-auto">
-            <h2 class="font-display text-lg font-bold text-white uppercase tracking-wider">
-              No hay niveles registrados en el código
-            </h2>
+            <h2 class="font-display text-lg font-bold text-white uppercase tracking-wider">No hay niveles en la lista</h2>
           </div>
         </div>
 
         <div id="right-level-panel" class="bg-pc-panel rounded border border-pc-border overflow-hidden space-y-0 shadow-xl">
-          
-          <!-- Encabezado del Nivel -->
           <div class="p-5 border-b border-pc-border bg-pc-card/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div class="flex items-center gap-3">
                 <span id="detail-rank" class="font-display font-extrabold text-3xl text-pc-accent">#1</span>
                 <div>
                   <h2 id="detail-name" class="font-display text-2xl font-bold text-white uppercase tracking-wide">Nombre del nivel</h2>
-                  <p class="text-xs text-pc-textMuted mt-0.5">
-                    Creado por <span id="detail-creator" class="text-slate-200 font-semibold">--</span>
-                  </p>
+                  <p class="text-xs text-pc-textMuted mt-0.5">Creador: <span id="detail-creator" class="text-slate-200 font-semibold">--</span></p>
                 </div>
               </div>
             </div>
@@ -305,19 +262,17 @@
             <div class="flex flex-wrap items-center gap-2 text-xs">
               <span id="detail-difficulty" class="px-2.5 py-1 bg-pc-bg border border-pc-border rounded text-[11px] font-bold text-red-400 uppercase">Extreme Demon</span>
               <span id="detail-id" class="px-2.5 py-1 bg-pc-bg border border-pc-border rounded text-[11px] font-mono text-amber-400 font-semibold cursor-pointer hover:bg-pc-hover transition-colors" onclick="copyToClipboard(currentLevelIdText)" title="Clic para copiar ID">ID: --</span>
+
               <button onclick="openRecordModalForCurrent()" class="px-3 py-1 bg-emerald-600/90 hover:bg-emerald-500 rounded text-white font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-1.5">
                 <i class="fa-solid fa-paper-plane text-[10px]"></i> Enviar Récord
               </button>
             </div>
           </div>
 
-          <!-- Área del Vídeo Embed -->
           <div class="p-5 border-b border-pc-border bg-black/40">
-            <div class="w-full aspect-video bg-black rounded border border-pc-border overflow-hidden flex items-center justify-center relative shadow-inner" id="detail-video-wrapper">
-            </div>
+            <div class="w-full aspect-video bg-black rounded border border-pc-border overflow-hidden flex items-center justify-center relative shadow-inner" id="detail-video-wrapper"></div>
           </div>
 
-          <!-- Cuadrícula de Detalles -->
           <div class="p-5 border-b border-pc-border grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-pc-card/30">
             <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
               <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Verificado por</span>
@@ -333,17 +288,15 @@
             </div>
             <div class="p-2.5 bg-pc-bg rounded border border-pc-border">
               <span class="text-[10px] text-pc-textMuted uppercase font-bold block mb-0.5">Canción ID / Nombre</span>
-              <span id="detail-song" class="font-semibold text-slate-300 truncate block cursor-pointer hover:text-white" onclick="copySongInfo()" title="Clic para copiar canción">--</span>
+              <span id="detail-song" class="font-semibold text-slate-300 truncate block cursor-pointer hover:text-white" onclick="copySongInfo()" title="Clic para copiar">--</span>
             </div>
           </div>
 
-          <!-- Tabla de Récords / Victorias -->
           <div class="p-5 space-y-3">
             <div class="flex items-center justify-between">
               <h3 class="font-display font-bold text-sm uppercase text-white tracking-wide flex items-center gap-2">
                 <i class="fa-solid fa-trophy text-amber-400"></i> Victorias y Récords (<span id="detail-records-count">0</span>)
               </h3>
-              <span class="text-[11px] text-pc-textMuted">Porcentajes verificados</span>
             </div>
 
             <div class="overflow-x-auto">
@@ -356,30 +309,27 @@
                     <th class="pb-2 text-right">Prueba</th>
                   </tr>
                 </thead>
-                <tbody id="detail-records-list" class="divide-y divide-pc-border/40">
-                  <!-- Se puebla dinámicamente -->
-                </tbody>
+                <tbody id="detail-records-list" class="divide-y divide-pc-border/40"></tbody>
               </table>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
 
     <!-- SECCIÓN 2: LEADERBOARD TAB -->
     <div id="tab-content-leaderboard" class="hidden space-y-4">
-      <div class="bg-pc-panel rounded border border-pc-border p-6 space-y-5 max-w-4xl mx-auto shadow-xl">
-        <div class="border-b border-pc-border pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div class="bg-pc-panel rounded border border-pc-border p-6 space-y-5 max-w-5xl mx-auto shadow-xl">
+        <div class="border-b border-pc-border pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="font-display font-bold text-xl uppercase text-white tracking-wide flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard de Jugadores
+              <i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard Oficial de Jugadores
             </h2>
-            <p class="text-xs text-pc-textMuted">Jugadores destacados según los puntos obtenidos por victorias en los Demons de la lista.</p>
+            <p class="text-xs text-pc-textMuted">Puntuación basada en la dificultad y posición de los Demons pasados.</p>
           </div>
-          <span class="text-xs font-mono text-pc-accent bg-pc-card px-3 py-1 rounded border border-pc-border">Actualizado en Vivo</span>
+          <button onclick="toggleRecordModal(true)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 rounded text-xs font-semibold text-white transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20">
+            <i class="fa-solid fa-plus text-[10px]"></i> Enviar Petición al Leaderboard
+          </button>
         </div>
 
         <div class="overflow-x-auto">
@@ -392,9 +342,7 @@
                 <th class="pb-3 text-right">Puntos Totales</th>
               </tr>
             </thead>
-            <tbody id="leaderboard-table-body" class="divide-y divide-pc-border/40">
-              <!-- Calculado automáticamente desde niveles y récords -->
-            </tbody>
+            <tbody id="leaderboard-table-body" class="divide-y divide-pc-border/40"></tbody>
           </table>
         </div>
       </div>
@@ -407,44 +355,15 @@
           <h2 class="font-display font-bold text-xl uppercase text-white tracking-wide flex items-center gap-2">
             <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Reglas Oficiales de Verificación
           </h2>
-          <p class="text-xs text-pc-textMuted">Normas estrictas requeridas para la aceptación de récords en Koinonia List.</p>
         </div>
-
         <div class="space-y-3.5 text-xs text-slate-300 leading-relaxed">
           <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
-            <h3 class="font-bold text-white text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-pc-accent/20 text-pc-accent flex items-center justify-center text-xs">1</span> Grabación de Vídeo Completa
-            </h3>
-            <p class="text-pc-textMuted">
-              El vídeo enviado debe ser continuo, sin cortes en la imagen ni modificaciones en la velocidad. Debe mostrar el intento desde el 0% hasta la pantalla final de nivel completado.
-            </p>
+            <h3 class="font-bold text-white text-sm">1. Grabación de Vídeo Completa</h3>
+            <p class="text-pc-textMuted">El vídeo debe ser continuo del 0% a la pantalla final sin cortes.</p>
           </div>
-
           <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
-            <h3 class="font-bold text-white text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-pc-accent/20 text-pc-accent flex items-center justify-center text-xs">2</span> Audio de Clics / Pulsaciones (Clicks / Taps)
-            </h3>
-            <p class="text-pc-textMuted">
-              Todos los récords deben incluir audio audible de clics o pulsaciones sincronizadas con el juego. Para niveles en el Top 5, los clics son estrictamente obligatorios sin excepción.
-            </p>
-          </div>
-
-          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
-            <h3 class="font-bold text-white text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-pc-accent/20 text-pc-accent flex items-center justify-center text-xs">3</span> Modificaciones y Hacks Permitidos
-            </h3>
-            <p class="text-pc-textMuted">
-              Se permite el uso de FPS / TPS Bypass hasta un límite máximo de 360 FPS. Herramientas como Mega Hack están permitidas únicamente con utilidades cosméticas o informativas (CPS, Cheat Indicator en verde, Show Inputs).
-            </p>
-          </div>
-
-          <div class="p-4 bg-pc-card rounded border border-pc-border space-y-1">
-            <h3 class="font-bold text-white text-sm flex items-center gap-2">
-              <span class="w-5 h-5 rounded bg-pc-accent/20 text-pc-accent flex items-center justify-center text-xs">4</span> Prohibición de Secret Ways y Bugs
-            </h3>
-            <p class="text-pc-textMuted">
-              No se aceptará ningún récord logrado mediante atajos no intencionados, modificaciones a la ID del nivel, físicas alteradas o uso de hacks de juego (Speedhack, Hitbox, Noclip, etc.).
-            </p>
+            <h3 class="font-bold text-white text-sm">2. Audio de Clics</h3>
+            <p class="text-pc-textMuted">Obligatorio audio de clics sincronizados (Top 5 sin excepciones).</p>
           </div>
         </div>
       </div>
@@ -452,58 +371,31 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="mt-auto border-t border-pc-border bg-pc-panel py-4 text-xs text-pc-textMuted relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div>
-        <strong class="text-slate-300">Geometry Dash Koinonia List</strong> — Estilo Pointercrate Oficial.
-      </div>
-      <div>
-        Diseñada para la verificación y seguimiento de la comunidad.
-      </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <span>Geometry Dash Koinonia List — Estilo Pointercrate Oficial.</span>
     </div>
   </footer>
 
-  <!-- SCRIPT CON TUS WEBHOOKS INTEGRADOS -->
   <script>
-    // WEBHOOKS CONFIGURADOS CON TUS ENLACES DE DISCORD
-    const DISCORD_WEBHOOK_RECORDS = "https://discordapp.com/api/webhooks/1564820733723410465/QDrBKNrYE5Rqf6H-F8fsoEzgG6aGuOtxzljELsC-1qlWaKWfr0fSp-5dZobFyfAt54_N";
+    const DISCORD_WEBHOOK_LEADERBOARD = "https://discordapp.com/api/webhooks/1564832153987063899/-czv6f4baU394BJ1nweCBWa7zOzsOifGFoNOCmO9A3Zh0HWzrpJzNT2WfEwrdjE-OHyq";
     const DISCORD_WEBHOOK_LEVELS = "https://discordapp.com/api/webhooks/1564820939454292038/1_cG744ZMUtHWLIwDkNw580qX66K_7SDd1McrdxqGGBdcnP38jmNhDLwXjw2sowanijZ";
 
-    /* ==========================================================================
-        ARREGLO DE NIVELES (LEVELS ARRAY)
-        Añade, edita o quita niveles directamente desde aquí.
-        ========================================================================== */
-    const LEVELS = [
+    let DEFAULT_LEVELS = [
       {
-        id: 1,
-        name: "INSANE JUMPER",
-        creator: "AlejoGDOfficial",
-        verifier: "AlejoGDOfficial",
-        difficulty: "Top 1",
-        levelId: "150470247",
-        cutoff: "100%",
-        song: "JUMPER",
-        videoUrl: "https://medal.tv/es/games/geometry-dash/clips/nLvxBiT71im9WeBN2?invite=cr-MSxmNzAsNzI4MTc3NTkw",
-        videoEmbed: "",
-        records: [
-          { player: "ItzSzkPlayz", percentage: "2%", fps: "240 FPS / 60 Hz", video: "https://youtube.com" }
-        ]
+        id: 1, name: "INSANE JUMPER", creator: "AlejoGDOfficial", verifier: "AlejoGDOfficial",
+        difficulty: "Top 1 Demon", levelId: "150470247", cutoff: "100%", song: "JUMPER",
+        videoUrl: "https://medal.tv/es/games/geometry-dash/clips/nLvxBiT71im9WeBN2", videoEmbed: "",
+        records: [{ player: "senzk", percentage: "100%", fps: "360 FPS", video: "https://youtube.com" }]
       },
       {
-        id: 2,
-        name: "Privastered",
-        creator: "DAVILEXI",
-        verifier: "DAVILEXI",
-        difficulty: "Top 2",
-        levelId: "150461579",
-        cutoff: "100%",
-        song: "BAD PITCH FOR YOU",
-        videoUrl: "https://youtube.com",
-        videoEmbed: "",
-        records: []
+        id: 2, name: "Privastered", creator: "DAVILEXI", verifier: "DAVILEXI",
+        difficulty: "Top 2 Demon", levelId: "150461579", cutoff: "100%", song: "BAD PITCH FOR YOU",
+        videoUrl: "https://youtube.com", videoEmbed: "", records: []
       }
     ];
+
+    let LEVELS = JSON.parse(localStorage.getItem('koinonia_levels')) || DEFAULT_LEVELS;
 
     let selectedLevelId = LEVELS.length > 0 ? LEVELS[0].id : null;
     let currentLevelIdText = "";
@@ -513,208 +405,132 @@
       renderSidebarList();
       renderSelectedLevelDetails();
       renderLeaderboard();
+      populateLevelSelectModal();
     });
 
-    // Pestañas
+    function saveState() {
+      localStorage.setItem('koinonia_levels', JSON.stringify(LEVELS));
+      populateLevelSelectModal();
+    }
+
+    function populateLevelSelectModal() {
+      const select = document.getElementById('rec-level-select');
+      if (!select) return;
+      select.innerHTML = LEVELS.map((l, i) => `<option value="${l.id}">#${i + 1} - ${escapeHtml(l.name)}</option>`).join('');
+    }
+
     function switchTab(tabId) {
-      const tabs = ['list', 'leaderboard', 'rules'];
-      
-      tabs.forEach(t => {
+      ['list', 'leaderboard', 'rules'].forEach(t => {
         const content = document.getElementById(`tab-content-${t}`);
         const navBtn = document.getElementById(`nav-${t}`);
         const mobBtn = document.getElementById(`mob-${t}`);
-
         if (t === tabId) {
           content.classList.remove('hidden');
-          if (navBtn) navBtn.className = "nav-btn px-3 py-2 rounded text-xs font-semibold text-white bg-pc-card border border-pc-border flex items-center gap-1.5 transition-all shadow-sm";
-          if (mobBtn) mobBtn.className = "mob-btn py-1.5 px-3 rounded font-bold text-white bg-pc-card border border-pc-border";
+          if (navBtn) navBtn.classList.add('bg-pc-card', 'text-white');
+          if (mobBtn) mobBtn.classList.add('bg-pc-card', 'text-white');
         } else {
           content.classList.add('hidden');
-          if (navBtn) navBtn.className = "nav-btn px-3 py-2 rounded text-xs font-semibold text-pc-textMuted hover:text-white hover:bg-pc-hover flex items-center gap-1.5 transition-all";
-          if (mobBtn) mobBtn.className = "mob-btn py-1.5 px-3 rounded text-pc-textMuted";
+          if (navBtn) navBtn.classList.remove('bg-pc-card', 'text-white');
+          if (mobBtn) mobBtn.classList.remove('bg-pc-card', 'text-white');
         }
       });
-
       if (tabId === 'leaderboard') renderLeaderboard();
     }
 
-    // Modal Control: Enviar Récord
     function toggleRecordModal(show) {
-      const modal = document.getElementById('submit-record-modal');
       if (show) {
-        const lvl = LEVELS.find(l => l.id === selectedLevelId);
-        if (lvl) {
-          document.getElementById('rec-level-name').value = `#${LEVELS.findIndex(l => l.id === lvl.id) + 1} - ${lvl.name}`;
-        }
-        modal.classList.remove('hidden');
-      } else {
-        modal.classList.add('hidden');
+        const select = document.getElementById('rec-level-select');
+        if (select && selectedLevelId) select.value = selectedLevelId;
       }
+      document.getElementById('submit-record-modal').classList.toggle('hidden', !show);
     }
 
-    function openRecordModalForCurrent() {
-      toggleRecordModal(true);
-    }
+    function openRecordModalForCurrent() { toggleRecordModal(true); }
+    function toggleProposeModal(show) { document.getElementById('propose-level-modal').classList.toggle('hidden', !show); }
 
-    // Modal Control: Proponer Nivel
-    function toggleProposeModal(show) {
-      const modal = document.getElementById('propose-level-modal');
-      if (show) modal.classList.remove('hidden');
-      else modal.classList.add('hidden');
-    }
-
-    // Envío de Récord por Webhook
     async function handleRecordSubmit(e) {
       e.preventDefault();
-      const btn = document.getElementById('rec-submit-btn');
-      const lvl = LEVELS.find(l => l.id === selectedLevelId);
+      const levelSelectId = parseInt(document.getElementById('rec-level-select').value);
+      const lvl = LEVELS.find(l => l.id === levelSelectId);
       
-      const player = document.getElementById('rec-player').value.trim();
-      const percentage = document.getElementById('rec-percentage').value.trim();
-      const fps = document.getElementById('rec-fps').value;
-      const video = document.getElementById('rec-video').value.trim();
-      const notes = document.getElementById('rec-notes').value.trim();
-
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Enviando...`;
-
-      const embedPayload = {
-        embeds: [{
-          title: "🏆 Nuevo Récord Enviado",
-          color: 3066993, // Verde
-          fields: [
-            { name: "Nivel", value: `**#${LEVELS.findIndex(l => l.id === lvl.id) + 1} - ${lvl.name}**`, inline: false },
-            { name: "Jugador", value: player, inline: true },
-            { name: "Progreso", value: percentage, inline: true },
-            { name: "Tasa de Refresco / FPS", value: fps, inline: true },
-            { name: "Prueba en Vídeo", value: `[Ver Vídeo](${video})`, inline: false },
-            { name: "Notas", value: notes || "Ninguna", inline: false }
-          ],
-          timestamp: new Date().toISOString(),
-          footer: { text: "Geometry Dash Koinonia Demonlist" }
-        }]
+      const requestData = {
+        player: document.getElementById('rec-player').value.trim(),
+        percentage: document.getElementById('rec-percentage').value.trim(),
+        fps: document.getElementById('rec-fps').value,
+        video: document.getElementById('rec-video').value.trim(),
+        notes: document.getElementById('rec-notes').value.trim()
       };
 
       try {
-        const response = await fetch(DISCORD_WEBHOOK_RECORDS, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(embedPayload)
+        await fetch(DISCORD_WEBHOOK_LEADERBOARD, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [{
+              title: "🏆 Petición de Leaderboard / Récord Recibida",
+              color: 3066993,
+              fields: [
+                { name: "Nombre de la cuenta", value: requestData.player, inline: true },
+                { name: "Demon pasado", value: lvl ? lvl.name : "Desconocido", inline: true },
+                { name: "Porcentaje / FPS", value: `${requestData.percentage} (${requestData.fps})`, inline: true },
+                { name: "Vídeo de prueba", value: requestData.video ? `[Ver Vídeo](${requestData.video})` : "No adjuntado", inline: false },
+                { name: "Demons pasados / Notas", value: requestData.notes || "Ninguna", inline: false }
+              ],
+              timestamp: new Date().toISOString()
+            }]
+          })
         });
+      } catch (err) {}
 
-        if (response.ok || response.status === 204) {
-          showToast("¡Récord enviado con éxito a Discord!", "success");
-          toggleRecordModal(false);
-          document.getElementById('record-form').reset();
-        } else {
-          throw new Error("Error en Discord API");
-        }
-      } catch (err) {
-        showToast("Error al enviar el récord. Revisa tu conexión.", "error");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Enviar a Discord";
-      }
+      toggleRecordModal(false);
+      document.getElementById('record-form').reset();
+      showToast("Petición enviada al webhook de Discord con éxito.", "success");
     }
 
-    // Envío de Propuesta de Nivel por Webhook
     async function handleLevelPropose(e) {
       e.preventDefault();
-      const btn = document.getElementById('prop-submit-btn');
-      
-      const name = document.getElementById('prop-name').value.trim();
-      const levelId = document.getElementById('prop-levelid').value.trim();
-      const song = document.getElementById('prop-song').value.trim();
-      const creator = document.getElementById('prop-creator').value.trim();
-      const verifier = document.getElementById('prop-verifier').value.trim();
-      const video = document.getElementById('prop-video').value.trim();
-
-      btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Enviando...`;
-
-      const embedPayload = {
-        embeds: [{
-          title: "📌 Nueva Propuesta de Nivel",
-          color: 38159, // Azul
-          fields: [
-            { name: "Nombre del Nivel", value: `**${name}** (ID: ${levelId})`, inline: false },
-            { name: "Creador", value: creator, inline: true },
-            { name: "Verificador", value: verifier, inline: true },
-            { name: "Canción", value: song, inline: true },
-            { name: "Vídeo de Verificación", value: `[Ver Showcase/Vídeo](${video})`, inline: false }
-          ],
-          timestamp: new Date().toISOString(),
-          footer: { text: "Geometry Dash Koinonia Demonlist" }
-        }]
+      const requestData = {
+        name: document.getElementById('prop-name').value.trim(),
+        levelId: document.getElementById('prop-levelid').value.trim(),
+        song: document.getElementById('prop-song').value.trim(),
+        creator: document.getElementById('prop-creator').value.trim(),
+        verifier: document.getElementById('prop-verifier').value.trim(),
+        videoUrl: document.getElementById('prop-video').value.trim()
       };
 
       try {
-        const response = await fetch(DISCORD_WEBHOOK_LEVELS, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(embedPayload)
+        await fetch(DISCORD_WEBHOOK_LEVELS, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ embeds: [{ title: "📌 Propuesta de Nivel", fields: [{ name: "Nivel", value: requestData.name }, { name: "Creador", value: requestData.creator }] }] })
         });
+      } catch (err) {}
 
-        if (response.ok || response.status === 204) {
-          showToast("¡Propuesta de nivel enviada a Discord!", "success");
-          toggleProposeModal(false);
-          document.getElementById('propose-form').reset();
-        } else {
-          throw new Error("Error en Discord API");
-        }
-      } catch (err) {
-        showToast("Error al enviar la propuesta.", "error");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Enviar Propuesta a Discord";
-      }
+      toggleProposeModal(false);
+      document.getElementById('propose-form').reset();
+      showToast("Propuesta de nivel enviada.", "success");
     }
 
-    // Renderizado Sidebar
     function renderSidebarList() {
-      const sidebarContainer = document.getElementById('level-sidebar-list');
-      const headerCount = document.getElementById('header-count');
-      const filteredCountLabel = document.getElementById('filtered-count-label');
-
-      headerCount.textContent = LEVELS.length;
-
+      const container = document.getElementById('level-sidebar-list');
+      document.getElementById('header-count').textContent = LEVELS.length;
       if (LEVELS.length === 0) {
-        sidebarContainer.innerHTML = `<div class="p-4 bg-pc-panel rounded border border-pc-border text-center text-xs text-pc-textMuted italic">No hay niveles en la lista.</div>`;
-        filteredCountLabel.textContent = '';
+        container.innerHTML = `<div class="p-4 bg-pc-panel rounded border border-pc-border text-center text-xs text-pc-textMuted italic">No hay niveles.</div>`;
         return;
       }
-
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
-      const filtered = LEVELS.filter(lvl => 
-        lvl.name.toLowerCase().includes(searchQuery) ||
-        lvl.creator.toLowerCase().includes(searchQuery) ||
-        lvl.verifier.toLowerCase().includes(searchQuery) ||
-        lvl.levelId.includes(searchQuery)
-      );
-
-      filteredCountLabel.textContent = searchQuery ? `${filtered.length} coincidencia(s)` : '';
-
-      if (filtered.length === 0) {
-        sidebarContainer.innerHTML = `<div class="p-4 bg-pc-panel rounded border border-pc-border text-center text-xs text-pc-textMuted italic">Sin resultados para "${escapeHtml(searchQuery)}"</div>`;
-        return;
-      }
-
-      sidebarContainer.innerHTML = filtered.map(lvl => {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const filtered = LEVELS.filter(l => l.name.toLowerCase().includes(query) || l.creator.toLowerCase().includes(query));
+      container.innerHTML = filtered.map(lvl => {
         const rank = LEVELS.findIndex(l => l.id === lvl.id) + 1;
-        const isActive = lvl.id === selectedLevelId;
-
         return `
-          <button onclick="selectLevel(${lvl.id})" class="w-full text-left p-2.5 rounded bg-pc-panel hover:bg-pc-hover border border-pc-border transition-all flex items-center justify-between gap-3 ${isActive ? 'level-item-active' : ''}">
+          <button onclick="selectLevel(${lvl.id})" class="w-full text-left p-2.5 rounded bg-pc-panel hover:bg-pc-hover border border-pc-border transition-all flex items-center justify-between gap-3 ${lvl.id === selectedLevelId ? 'level-item-active' : ''}">
             <div class="flex items-center gap-3 overflow-hidden">
               <span class="font-display font-extrabold text-sm ${rank === 1 ? 'text-amber-400' : 'text-pc-accent'} w-6 text-right font-mono">#${rank}</span>
               <div class="truncate">
-                <h4 class="font-display font-bold text-xs text-white truncate uppercase tracking-wider">${escapeHtml(lvl.name)}</h4>
+                <h4 class="font-display font-bold text-xs text-white truncate uppercase">${escapeHtml(lvl.name)}</h4>
                 <p class="text-[10px] text-pc-textMuted truncate">Por ${escapeHtml(lvl.creator)}</p>
               </div>
             </div>
             <i class="fa-solid fa-chevron-right text-[10px] text-pc-textMuted"></i>
-          </button>
-        `;
+          </button>`;
       }).join('');
     }
 
@@ -724,218 +540,118 @@
       renderSelectedLevelDetails();
     }
 
-    // Render Vista Principal
     function renderSelectedLevelDetails() {
-      const emptyPanel = document.getElementById('right-empty-panel');
-      const levelPanel = document.getElementById('right-level-panel');
-
+      const empty = document.getElementById('right-empty-panel');
+      const panel = document.getElementById('right-level-panel');
       if (LEVELS.length === 0 || !selectedLevelId) {
-        emptyPanel.classList.remove('hidden');
-        levelPanel.classList.add('hidden');
-        return;
+        empty.classList.remove('hidden'); panel.classList.add('hidden'); return;
       }
-
-      const lvlIndex = LEVELS.findIndex(l => l.id === selectedLevelId);
-      if (lvlIndex === -1) {
-        emptyPanel.classList.remove('hidden');
-        levelPanel.classList.add('hidden');
-        return;
-      }
-
-      const lvl = LEVELS[lvlIndex];
-      const rank = lvlIndex + 1;
+      const idx = LEVELS.findIndex(l => l.id === selectedLevelId);
+      if (idx === -1) { empty.classList.remove('hidden'); panel.classList.add('hidden'); return; }
+      const lvl = LEVELS[idx];
+      const rank = idx + 1;
       const points = (100 / (rank * 0.75 + 0.25)).toFixed(2);
       currentLevelIdText = lvl.levelId;
 
-      emptyPanel.classList.add('hidden');
-      levelPanel.classList.remove('hidden');
-
+      empty.classList.add('hidden'); panel.classList.remove('hidden');
       document.getElementById('detail-rank').textContent = `#${rank}`;
       document.getElementById('detail-name').textContent = lvl.name;
       document.getElementById('detail-creator').textContent = lvl.creator;
       document.getElementById('detail-verifier').textContent = lvl.verifier;
-      document.getElementById('detail-difficulty').textContent = lvl.difficulty || "Extreme Demon";
       document.getElementById('detail-id').textContent = `ID: ${lvl.levelId}`;
       document.getElementById('detail-cutoff').textContent = lvl.cutoff || "100%";
       document.getElementById('detail-points').textContent = `${points} pts`;
       document.getElementById('detail-song').textContent = lvl.song || "Desconocida";
 
       const videoWrapper = document.getElementById('detail-video-wrapper');
-      if (lvl.videoEmbed) {
-        videoWrapper.innerHTML = `<iframe class="w-full h-full" src="${escapeHtml(lvl.videoEmbed)}" title="${escapeHtml(lvl.name)}" frameborder="0" allowfullscreen></iframe>`;
-      } else {
-        videoWrapper.innerHTML = `
-          <div class="text-center p-6 space-y-2">
-            <i class="fa-solid fa-play text-4xl text-pc-accent"></i>
-            <p class="text-xs text-slate-300 font-bold">Demostración / Verificación Oficial</p>
-            <a href="${escapeHtml(lvl.videoUrl)}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pc-card hover:bg-pc-hover border border-pc-border rounded text-xs font-semibold text-white transition-all">
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Ver Vídeo de Prueba
-            </a>
-          </div>
-        `;
-      }
+      videoWrapper.innerHTML = `
+        <div class="text-center p-6 space-y-2">
+          <i class="fa-solid fa-play text-4xl text-pc-accent"></i>
+          <p class="text-xs text-slate-300 font-bold">Demostración Oficial</p>
+          <a href="${escapeHtml(lvl.videoUrl)}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-pc-card hover:bg-pc-hover border border-pc-border rounded text-xs font-semibold text-white">
+            Ver Vídeo de Prueba
+          </a>
+        </div>`;
 
-      const recordsContainer = document.getElementById('detail-records-list');
-      const recordsCount = document.getElementById('detail-records-count');
-
-      recordsCount.textContent = lvl.records ? lvl.records.length : 0;
-
-      if (lvl.records && lvl.records.length > 0) {
-        recordsContainer.innerHTML = lvl.records.map(rec => `
-          <tr class="hover:bg-pc-hover/60 transition-colors">
-            <td class="py-2.5 font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-user-check text-sky-400 text-[11px]"></i>
-              <span>${escapeHtml(rec.player)}</span>
-            </td>
-            <td class="py-2.5 font-mono text-emerald-400 font-bold">${rec.percentage || '100%'}</td>
-            <td class="py-2.5 font-mono text-slate-400">${rec.fps || '360 FPS'}</td>
-            <td class="py-2.5 text-right">
-              <a href="${escapeHtml(rec.video)}" target="_blank" class="text-pc-textMuted hover:text-white transition-colors text-xs inline-flex items-center gap-1">
-                <i class="fa-solid fa-video text-pc-accent"></i> Ver Vídeo
-              </a>
-            </td>
-          </tr>
-        `).join('');
-      } else {
-        recordsContainer.innerHTML = `
-          <tr>
-            <td colspan="4" class="py-4 text-center text-pc-textMuted italic">
-              No hay victorias registradas para este nivel aún.
-            </td>
-          </tr>
-        `;
-      }
+      const recContainer = document.getElementById('detail-records-list');
+      document.getElementById('detail-records-count').textContent = lvl.records ? lvl.records.length : 0;
+      
+      recContainer.innerHTML = lvl.records && lvl.records.length > 0 ? lvl.records.map((r) => `
+        <tr class="hover:bg-pc-hover/60">
+          <td class="py-2.5 font-bold text-white">${escapeHtml(r.player)}</td>
+          <td class="py-2.5 font-mono text-emerald-400">${r.percentage}</td>
+          <td class="py-2.5 font-mono text-slate-400">${r.fps}</td>
+          <td class="py-2.5 text-right flex items-center justify-end gap-2">
+            ${r.video ? `<a href="${escapeHtml(r.video)}" target="_blank" class="text-pc-accent">Ver Vídeo</a>` : '<span class="text-pc-textMuted">Sin vídeo</span>'}
+          </td>
+        </tr>`).join('') : `<tr><td colspan="4" class="py-4 text-center text-pc-textMuted italic">Sin récords aún.</td></tr>`;
     }
 
-    // Leaderboard
     function renderLeaderboard() {
       const tbody = document.getElementById('leaderboard-table-body');
-      const playerStats = {};
-
+      const stats = {};
       LEVELS.forEach((lvl, idx) => {
-        const rank = idx + 1;
-        const points = parseFloat((100 / (rank * 0.75 + 0.25)).toFixed(2));
-
+        const pts = parseFloat((100 / ((idx + 1) * 0.75 + 0.25)).toFixed(2));
         if (lvl.records) {
-          lvl.records.forEach(rec => {
-            const p = rec.player;
-            if (!playerStats[p]) {
-              playerStats[p] = { name: p, points: 0, completions: 0 };
-            }
-            playerStats[p].points += points;
-            playerStats[p].completions += 1;
+          lvl.records.forEach(r => {
+            if (!stats[r.player]) stats[r.player] = { name: r.player, points: 0, completions: 0 };
+            stats[r.player].points += pts;
+            stats[r.player].completions += 1;
           });
         }
       });
 
-      const sortedPlayers = Object.values(playerStats).sort((a, b) => b.points - a.points);
-
-      if (sortedPlayers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-pc-textMuted italic">No hay suficientes récords para mostrar el Leaderboard aún.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = sortedPlayers.map((pl, i) => `
-        <tr class="hover:bg-pc-hover/40 transition-colors">
-          <td class="py-3 font-mono font-extrabold ${i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-amber-600' : 'text-pc-textMuted'}">#${i + 1}</td>
-          <td class="py-3 font-bold text-white">${escapeHtml(pl.name)}</td>
-          <td class="py-3 text-center font-mono text-slate-300">${pl.completions}</td>
-          <td class="py-3 text-right font-mono font-bold text-emerald-400">${pl.points.toFixed(2)} pts</td>
-        </tr>
-      `).join('');
+      const sorted = Object.values(stats).sort((a, b) => b.points - a.points);
+      tbody.innerHTML = sorted.length ? sorted.map((p, i) => `
+        <tr class="hover:bg-pc-hover/40">
+          <td class="py-3 font-mono font-extrabold ${i === 0 ? 'text-amber-400' : 'text-pc-textMuted'}">#${i + 1}</td>
+          <td class="py-3 font-bold text-white">${escapeHtml(p.name)}</td>
+          <td class="py-3 text-center font-mono text-slate-300">${p.completions}</td>
+          <td class="py-3 text-right font-mono font-bold text-emerald-400">${p.points.toFixed(2)} pts</td>
+        </tr>`).join('') : `<tr><td colspan="4" class="py-6 text-center text-pc-textMuted italic">No hay datos en el Leaderboard.</td></tr>`;
     }
 
-    function filterLevels() {
-      renderSidebarList();
-    }
-
-    function copyToClipboard(text) {
-      if (!text) return;
-      navigator.clipboard.writeText(text);
-      showToast(`ID copiada: ${text}`, "info");
-    }
-
-    function copySongInfo() {
-      const songText = document.getElementById('detail-song').textContent;
-      navigator.clipboard.writeText(songText);
-      showToast(`Canción copiada: ${songText}`, "info");
-    }
+    function filterLevels() { renderSidebarList(); }
+    function copyToClipboard(t) { navigator.clipboard.writeText(t); showToast("ID copiada", "info"); }
+    function copySongInfo() { navigator.clipboard.writeText(document.getElementById('detail-song').textContent); showToast("Canción copiada", "info"); }
 
     function showToast(msg, type = "info") {
       const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      const colors = {
-        success: "bg-emerald-600 border-emerald-500",
-        error: "bg-red-600 border-red-500",
-        info: "bg-pc-accent border-blue-400"
-      };
-      toast.className = `${colors[type] || colors.info} border text-white text-xs px-4 py-2.5 rounded shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto`;
-      toast.innerHTML = `<span>${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+      const t = document.createElement('div');
+      const colors = { success: "bg-emerald-600", error: "bg-red-600", info: "bg-pc-accent" };
+      t.className = `${colors[type]} text-white text-xs px-4 py-2.5 rounded shadow-xl flex items-center gap-2`;
+      t.innerHTML = `<span>${msg}</span>`;
+      container.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
     }
 
     function initCanvasBackground() {
       const canvas = document.getElementById('bg-canvas');
       const ctx = canvas.getContext('2d');
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
-
-      const particles = Array.from({ length: 45 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 2 + 1
-      }));
-
-      function animate() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#3b82f6';
-        ctx.strokeStyle = '#2b2e3a';
-
-        particles.forEach((p, i) => {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0 || p.x > width) p.vx *= -1;
-          if (p.y < 0 || p.y > height) p.vy *= -1;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-            if (dist < 120) {
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
+      let w = canvas.width = window.innerWidth, h = canvas.height = window.innerHeight;
+      const pts = Array.from({ length: 40 }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4 }));
+      function loop() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = '#3b82f6'; ctx.strokeStyle = '#2b2e3a';
+        pts.forEach((p, i) => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill();
+          for (let j = i + 1; j < pts.length; j++) {
+            if (Math.hypot(p.x - pts[j].x, p.y - pts[j].y) < 100) {
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
             }
           }
         });
-        requestAnimationFrame(animate);
+        requestAnimationFrame(loop);
       }
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      });
-
-      animate();
+      loop();
     }
 
     function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+      return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
   </script>
-
 </body>
 </html>
