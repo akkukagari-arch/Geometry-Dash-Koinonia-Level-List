@@ -499,14 +499,29 @@
 
       try {
         await fetch(DISCORD_WEBHOOK_LEVELS, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ embeds: [{ title: "📌 Propuesta de Nivel", fields: [{ name: "Nivel", value: requestData.name }, { name: "Creador", value: requestData.creator }] }] })
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            embeds: [{
+              title: "📌 Nueva Propuesta de Nivel Recibida",
+              color: 3888886,
+              fields: [
+                { name: "Nombre del Nivel", value: requestData.name, inline: true },
+                { name: "ID del Nivel", value: `\`${requestData.levelId}\``, inline: true },
+                { name: "Creador", value: requestData.creator, inline: true },
+                { name: "Verificador", value: requestData.verifier, inline: true },
+                { name: "Canción", value: requestData.song, inline: true },
+                { name: "Vídeo de Demostración", value: requestData.videoUrl ? `[Ver Vídeo de Prueba](${requestData.videoUrl})` : "No adjuntado", inline: false }
+              ],
+              timestamp: new Date().toISOString()
+            }]
+          })
         });
       } catch (err) {}
 
       toggleProposeModal(false);
       document.getElementById('propose-form').reset();
-      showToast("Propuesta de nivel enviada.", "success");
+      showToast("Propuesta de nivel enviada con éxito.", "success");
     }
 
     function renderSidebarList() {
